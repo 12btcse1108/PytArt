@@ -10,14 +10,28 @@
 <body>
     <div>
         <nav class="navbar navbar-inverse navbar-fixed-top">
-          <div class="container-fluid">
+          <div class="container">
             <div class="navbar-header">
               <a class="navbar-brand" href="#">
                 PytArt
               </a>
             </div>
+        <ul class="nav navbar-nav navbar-right">
+            <li><a href="/">Home</a></li>
+            <li><a href="login">Log In</a></li>
+            <li><a href="register">Sign Out</a></li>
+            <li><a href="#">About Us</a></li>
+        </ul>
           </div>
         </nav>
+        
+        {% block body %}
+        {%endblock%}
+        
     </div>
+    
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
 </body>
 </html>
