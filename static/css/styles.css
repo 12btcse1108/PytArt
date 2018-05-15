@@ -1,0 +1,33 @@
+
+
+
+#section-blog{
+       margin-top: 50px;
+       margin-bottom: 50px
+     }
+#section-blog h2 a{
+       color: #444444;
+       font-size: 18px;
+       font-family: "Poppins", sans-serif;
+       font-weight: 600;
+     }
+#section-blog h2 a:hover{
+       color: #00c8fa;
+       cursor:pointer;
+       text-decoration: none;
+     }
+#section-blog h3{
+        font-size: 18px;
+        font-family: "Poppins", sans-serif;
+        color: #00c8fa;
+        font-weight: 600;
+      }
+#section-blog .blog_box1 img{
+        margin-top: 30px;
+        height:120px;
+      }
+
+.article_head{
+       border: 2px solid #f1f1f1;
+     }
+
