@@ -1,0 +1,71 @@
+{% extends "main.html"%}
+
+{% block nav %}
+	{% if user != None %}
+
+	<li><a href="{{ url_for('home') }}">Home</a></li>
+	<li><a href="{{ url_for('create_article') }}">Create New</a></li>
+	<li><a href="{{ url_for('signout') }}">Sign Out</a></li>
+	<li><a href="#">About Us</a></li>
+
+	{% else %}
+	<li><a href="{{ url_for('home') }}">Home</a></li>
+	<li><a href="{{ url_for('login') }}">Log In</a></li>
+	<li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+	<li><a href="#">About Us</a></li>
+
+	{% endif %}
+
+{% endblock %}
+
+{% block head %}
+{{ super() }}
+  <style>
+    .blog-box{
+      margin-top: 70px;
+    }
+    .title h1{
+      color: rgba(0,0,0,.84);
+      display: block;
+      font-size: 40px;
+      font-weight: 600;
+      margin-bottom: 30px;
+    }
+    .img-blog{
+      margin-bottom: 70px;
+    }
+    .body-blog{
+      font-size: 21px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 30px;
+      margin-bottom: 70px;
+      color: rgba(0,0,0,.84);
+      text-align: justify;
+    }
+  </style>
+{% endblock %}
+
+{% block body %}
+  <div class="container blog-box">
+    <div class="row">
+      <div class="col-sm-10 col-md-8 col-md-offset-2">
+        <div class="blog-detail"></div>
+      <div class="title">
+        <h1>{{blog_box['title']}}</h1>
+      </div>
+      <div class="img-blog">
+        <img src="{{url_for('static', filename='images/'+blog_box['article_img'])}}" class="img-responsive" alt="image"/>
+      </div>
+      <div class="body-blog">{{blog_box['article_body']}}</div>
+    </div>
+  </div>
+</div>
+
+{% autoescape false %}
+{{ disqus_dev() }}
+{{ disqus_show_comments("comments_name") }}
+{% endautoescape %}
+
+
+{%endblock%}

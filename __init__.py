@@ -13,6 +13,7 @@ from flask_bcrypt import Bcrypt
 import os
 from werkzeug.utils import secure_filename
 from datetime import datetime
+from flask_disqus import Disqus
 
 content = content()
 
@@ -25,6 +26,8 @@ app.config['upload_folder'] = upload_folder
 
 bcrypt = Bcrypt(app)
 
+disq = Disqus(app)
+
 #connection to mongodb
 app.config['MONGO_DBNAME'] = 'pyart-mongo'
 app.config['MONGO_URI'] = 'mongodb://nitinverma1394:pyart-mongo@ds127564.mlab.com:27564/pyart-mongo'
@@ -36,13 +39,17 @@ def home():
     article = mongo.db.articles
     now = datetime.utcnow()
     content = []
+    if 'username' in session:
+        username = session['username']
+    else:
+        username = None
     for q in article.find():
         content.append({'title': q['title'],
                         'date': q['date'],
                         'article_body': q['article_body'],
                         'article_img': q['article_img']})
 
-    return render_template('dashboard.html', topic = content)
+    return render_template('dashboard.html', topic = content, user = username)
 
 @app.route('/create_article/', methods=['POST','GET'])
 def create_article():
@@ -70,6 +77,7 @@ def create_article():
 @app.route('/login/', methods=['POST','GET'])
 def login():
     if request.method == 'POST':
+        session['username'] = request.form['username']
         user = mongo.db.users
         login_user = user.find_one({'username': request.form['username']})
         if login_user:
@@ -96,6 +104,21 @@ def signup():
             return redirect(url_for('create_article'))
         return "user is already exist please try again"
     return render_template('register.html')
+
+@app.route('/signout/')
+def signout():
+    session.pop('username',None)
+    return redirect(url_for('home'))
+
+@app.route('/blog/<path:code>')
+def blog(code):
+    article = mongo.db.articles
+    blog = article.find({'title':code})
+    if blog.count() == 1:
+        blog_info = blog.next()
+
+    return render_template('display_blog.html',blog_box = blog_info)
+
 
 @app.errorhandler(404)
 def page_not_found():

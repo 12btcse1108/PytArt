@@ -1,4 +1,23 @@
 {% extends "main.html" %}
+
+{% block nav %}
+	{% if user != None %}
+
+	<li><a href="{{ url_for('home') }}">Home</a></li>
+	<li><a href="{{ url_for('create_article') }}">Create New</a></li>
+	<li><a href="{{ url_for('signout') }}">Sign Out</a></li>
+	<li><a href="#">About Us</a></li>
+
+	{% else %}
+	<li><a href="{{ url_for('home') }}">Home</a></li>
+	<li><a href="{{ url_for('login') }}">Log In</a></li>
+	<li><a href="{{ url_for('signup') }}">Sign Up</a></li>
+	<li><a href="#">About Us</a></li>
+
+	{% endif %}
+
+{% endblock %}
+
 {% block head %}
 {{ super() }}
   <style>
