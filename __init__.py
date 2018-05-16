@@ -13,7 +13,6 @@ from flask_bcrypt import Bcrypt
 import os
 from werkzeug.utils import secure_filename
 from datetime import datetime
-from flask_disqus import Disqus
 
 content = content()
 
@@ -26,7 +25,6 @@ app.config['upload_folder'] = upload_folder
 
 bcrypt = Bcrypt(app)
 
-disq = Disqus(app)
 
 #connection to mongodb
 app.config['MONGO_DBNAME'] = 'pyart-mongo'
