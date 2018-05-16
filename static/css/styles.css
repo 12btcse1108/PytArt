@@ -1,6 +1,4 @@
 
-
-
 #section-blog{
        margin-top: 50px;
        margin-bottom: 50px
@@ -31,3 +29,9 @@
        border: 2px solid #f1f1f1;
      }
 
+
+/* create_article style */
+
+.article_box{
+  margin-top: 70px;
+}

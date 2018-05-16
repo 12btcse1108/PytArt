@@ -10,10 +10,18 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from flask_pymongo import PyMongo
 from da_mgmt import content
 from flask_bcrypt import Bcrypt
+import os
+from werkzeug.utils import secure_filename
+from datetime import datetime
 
 content = content()
 
+upload_folder = './static/images'
+allowed_ext = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
+
 app = Flask(__name__)
+
+app.config['upload_folder'] = upload_folder
 
 bcrypt = Bcrypt(app)
 
@@ -26,44 +34,54 @@ mongo = PyMongo(app)
 @app.route('/')
 def home():
     article = mongo.db.articles
+    now = datetime.utcnow()
     content = []
     for q in article.find():
         content.append({'title': q['title'],
+                        'date': q['date'],
                         'article_body': q['article_body'],
                         'article_img': q['article_img']})
-        
+
     return render_template('dashboard.html', topic = content)
 
 @app.route('/create_article/', methods=['POST','GET'])
 def create_article():
     if request.method == 'POST':
+        now = datetime.utcnow()
         article = mongo.db.articles
+        file_img = request.files['file']
         article.insert({
                 'title': request.form['title'],
+                'date': now,
                 'article_body': request.form['article_body'],
-                'article_img': request.form['article_img']
+                'article_img': file_img.filename
                 })
+        try:
+            # save file in local folder
+            if file_img and (file_img.filename.rsplit('.',1)[1].lower() in allowed_ext):
+                file_name = secure_filename(file_img.filename)
+                file_img.save(os.path.join(app.config['upload_folder'], file_name))
+        except Exception as e:
+            print("Form without file ",str(e))
         return redirect(url_for('home'))
-        
-        
     return render_template('create_article.html')
-    
+
 
 @app.route('/login/', methods=['POST','GET'])
 def login():
     if request.method == 'POST':
         user = mongo.db.users
-        login_user = user.find_one({'username': request.form['username']}) 
+        login_user = user.find_one({'username': request.form['username']})
         if login_user:
             pass_match = bcrypt.check_password_hash(login_user['password'],request.form['pass'])
             if pass_match:
                 return redirect(url_for('create_article'))
-            
+
         return "username/password is incorrect"
-    
+
     return render_template('login.html')
 @app.route('/signup/', methods=['POST', 'GET'])
-def signup():  
+def signup():
     if request.method == 'POST':
         user = mongo.db.users
         existing_user =  user.find_one({'username': request.form['username']})
@@ -85,4 +103,4 @@ def page_not_found():
 
 if __name__ == '__main__':
     app.secret_key = 'mysecret'
-    app.run()
+    app.run(debug=True)
