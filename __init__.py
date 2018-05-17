@@ -11,8 +11,6 @@ from flask_pymongo import PyMongo
 from da_mgmt import content
 from flask_bcrypt import Bcrypt
 import os
-import jwt
-from werkzeug.utils import secure_filename
 import datetime
 
 content = content()
