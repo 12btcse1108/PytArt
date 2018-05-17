@@ -18,6 +18,82 @@
 
 {% endblock %}
 
+{% block head %}
+{{ super() }}
+  <style>
+	#myCarousel{
+		margin-top: 40px;
+	}
+	.carousel-inner img{
+		padding-top: 12px;
+		height: 440px;
+		width: 560px;
+	}
+	.carousel-control.right {
+	 background: none;
+
+	}
+	.carousel-control.left{
+	 background: none;
+	}
+	#section-blog{
+		margin-top: 50px;
+		margin-bottom: 50px
+	}
+	#section-blog a span{
+		color: #444444;
+		line-height: 20px;
+		margin-top: 8px;
+		font-size: 18px;
+		font-family: "Poppins", sans-serif;
+		font-weight: 600;
+	}
+	#section-blog a:hover span{
+		color: #00c8fa;
+		line-height: 20px;
+		cursor:pointer;
+		text-decoration: none;
+	}
+	 #section-blog h3{
+		 font-size: 18px;
+		 font-family: "Poppins", sans-serif;
+		 color: #00c8fa;
+		 font-weight: 600;
+	 }
+	 #section-blog .article-body2 img{
+		 margin-bottom: 15px;
+	 }
+	 #section-blog .blog_box1 img{
+	 	height: 170px;
+		width: 220px;
+		margin: auto;
+	 }
+	 .single-article-left{
+		width: 765px;
+    height: 210px;
+		margin-bottom: 3px;
+	 }
+	 .single-article-right{
+		 height:420px;
+		 width:320px;
+		 margin-bottom: 3px;
+	 }
+
+	.article_head{
+		border: 2px solid #f1f1f1;
+	}
+
+	.side_img_box img{
+		padding-top: 10px;
+		height: 217px;
+		width: 300px;
+	}
+
+
+	</style>
+{% endblock %}
+
+
 {% block body %}
 
 <!-- Start Carousel -->
@@ -78,27 +154,54 @@
 
 <section id="section-blog">
 	<div class="container">
-        	<div class="row article_head" >
-			<h3>Latest Articles</h3>
-			<hr>
-        		<div class="col-xs-12 col-sm-8 col-md-8 col-lg-8">
-				<div class="row">
-        				{% for item in topic %}
-									<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
-										<h2><a href="{{url_for('blog', code=item['title'])}}"> {{item['title']}} </a> </h2>
+      <div class="row article_head" >
+				<h3>Latest Articles</h3>
+					<hr>
+							{% for i in range(0,topic|length,3) %}
+								<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 articles-body">
+									<div class="row single-article-left">
+										<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 blog_box1">
+											<a href="{{url_for('blog', code=topic[i]['title'])}}"><span> {{topic[i]['title']}}</span> </a>
+											<h5>The one where we retain our sanity in a stupid world</h5>
+											<a href="#">author name</a>
+											<p>{{topic[i]['date']}}</p>
+										</div>
+										<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 blog_box1">
+											<img src="{{url_for('static', filename='images/'+topic[i]['article_img'])}}" class="img-responsive" alt="">
+										</div>
+									</div>
+										{% set i = i+1 %}
+										{% if i <topic|length %}
+										<div class="row single-article-left">
+											<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 blog_box1">
+										<a href="{{url_for('blog', code=topic[i]['title'])}}"><span> {{topic[i]['title']}} </span></a>
 										<h5>The one where we retain our sanity in a stupid world</h5>
 										<a href="#">author name</a>
-										<p>Date of Publish</p>
+										<p>{{topic[i]['date']}}</p>
 									</div>
-									<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 blog_box1">
-										<img src="{{url_for('static', filename='images/'+item['article_img'])}}" class="img-responsive" alt="">
+										<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 blog_box1">
+											<img src="{{url_for('static', filename='images/'+topic[i]['article_img'])}}" class="img-responsive" alt="">
+										</div>
 									</div>
-									<hr>
-        				{% endfor %}
-				</div>
+									{% endif %}
+							</div>
+									{% set i = i+1 %}
+									{% if i<topic|length %}
+
+								<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 article-body2">
+									<div class="row single-article-right">
+									<img src="{{url_for('static', filename='images/'+topic[i]['article_img'])}}" class="img-responsive" alt="">
+									<a href="{{url_for('blog', code=topic[i]['title'])}}"><span> {{topic[i]['title']}}</span> </a>
+									<h5>The one where we retain our sanity in a stupid world</h5>
+									<a href="#">author name</a>
+									<p>{{topic[i]['date']}}</p>
+								</div>
+								</div>
+								{% set i = i+1 %}
+								{% endif %}
+				{% endfor %}
 			</div>
 		</div>
-	</div>
 	</section>
 
 

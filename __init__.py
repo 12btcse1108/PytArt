@@ -11,8 +11,9 @@ from flask_pymongo import PyMongo
 from da_mgmt import content
 from flask_bcrypt import Bcrypt
 import os
+import jwt
 from werkzeug.utils import secure_filename
-from datetime import datetime
+import datetime
 
 content = content()
 
@@ -35,15 +36,16 @@ mongo = PyMongo(app)
 @app.route('/')
 def home():
     article = mongo.db.articles
-    now = datetime.utcnow()
+    now = datetime.datetime.utcnow()
     content = []
     if 'username' in session:
         username = session['username']
     else:
         username = None
-    for q in article.find():
+    for q in article.find().sort('date',-1):
+        now_for = now.strftime("%b %m")
         content.append({'title': q['title'],
-                        'date': q['date'],
+                        'date': now_for,
                         'article_body': q['article_body'],
                         'article_img': q['article_img']})
 
@@ -52,14 +54,15 @@ def home():
 @app.route('/create_article/', methods=['POST','GET'])
 def create_article():
     if request.method == 'POST':
-        now = datetime.utcnow()
+        now = datetime.datetime.utcnow()
         article = mongo.db.articles
         file_img = request.files['file']
         article.insert({
                 'title': request.form['title'],
                 'date': now,
                 'article_body': request.form['article_body'],
-                'article_img': file_img.filename
+                'article_img': file_img.filename,
+                'article_author': session['username']
                 })
         try:
             # save file in local folder
@@ -114,6 +117,7 @@ def blog(code):
     blog = article.find({'title':code})
     if blog.count() == 1:
         blog_info = blog.next()
+        print(blog_info)
 
     return render_template('display_blog.html',blog_box = blog_info)
 

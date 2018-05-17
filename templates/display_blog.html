@@ -57,7 +57,8 @@
       <div class="img-blog">
         <img src="{{url_for('static', filename='images/'+blog_box['article_img'])}}" class="img-responsive" alt="image"/>
       </div>
-      <div class="body-blog">{{blog_box['article_body']}}</div>
+			{% set blog = '<br />'.join(blog_box['article_body'].splitlines()) %}
+      <div class="body-blog">{{blog|safe}}</div>
 
 			<!-- adding disqus commenting system -->
 
@@ -81,7 +82,7 @@
 			})();
 			</script>
 			<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-			                  
+
     </div>
   </div>
 </div>
