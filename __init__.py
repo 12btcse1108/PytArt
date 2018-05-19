@@ -19,6 +19,7 @@ upload_folder = './static/images'
 allowed_ext = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 app = Flask(__name__)
+app.secret_key = b'\x18\x92L\x15\xa1\xfb\x19\xd1\x1a\x8a\xc1\xb0\xef\xd8\xd4\xc3'
 
 app.config['upload_folder'] = upload_folder
 
@@ -125,5 +126,5 @@ def page_not_found():
     return "404 error something is not right"
 
 if __name__ == '__main__':
-    app.secret_key = 'mysecret'
+
     app.run(debug=True)
